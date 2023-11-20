@@ -4,6 +4,8 @@ import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rezeptefuerdummies.R
+import com.example.rezeptefuerdummies.RezeptAdapter
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -16,14 +18,11 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.title = "Ihr Titel"
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        // RecyclerView für die Rezeptliste initialisieren
         val recyclerView: RecyclerView = findViewById(R.id.recyclerViewRezepte)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = RezeptAdapter(getBeispielRezepte()) // Implementieren Sie diese Funktion
+        recyclerView.adapter = RezeptAdapter(getBeispielRezepte())
 
     }
-
-    // Funktion zum Abrufen von Beispiel-Rezepten
     private fun getBeispielRezepte(): List<Rezept> {
 
         return listOf(

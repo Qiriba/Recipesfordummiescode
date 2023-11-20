@@ -1,16 +1,16 @@
+package com.example.rezeptefuerdummies
+
+import Rezept
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.rezeptefuerdummies.R
 
 class RezeptAdapter(private val rezepte: List<Rezept>) :
     RecyclerView.Adapter<RezeptAdapter.RezeptViewHolder>() {
 
     class RezeptViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val imageViewRezept: ImageView = itemView.findViewById(R.id.imageViewRezept)
         val textViewRezeptTitel: TextView = itemView.findViewById(R.id.textViewRezeptTitel)
     }
 
