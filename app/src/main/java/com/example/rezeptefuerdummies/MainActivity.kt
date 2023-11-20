@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
             recyclerView.layoutManager = LinearLayoutManager(this)
 
             // Create a list of feed items (replace this with your data)
-            val feedItemList: List<FeedItemModel> = createDummyData()
+            val feedItemList: MutableList<FeedItemModel> = createDummyData()
 
             // Create and set the adapter
             val adapter = FeedAdapter(feedItemList)
@@ -26,15 +26,16 @@ import androidx.recyclerview.widget.RecyclerView
         }
 
         // Replace this method with your actual data source
-        private fun createDummyData(): List<FeedItemModel> {
+        private fun createDummyData(): MutableList<FeedItemModel> {
             val dummyData = mutableListOf<FeedItemModel>()
 
             // Add your feed items to the list
-            dummyData.add(FeedItemModel(R.drawable.mutyez))
-            dummyData.add(FeedItemModel(R.drawable.mutyez))
-            dummyData.add(FeedItemModel(R.drawable.mutyez))
-            dummyData.add(FeedItemModel(R.drawable.mutyez))
-            dummyData.add(FeedItemModel(R.drawable.mutyez))
+            dummyData.add(FeedItemModel("https://karlsruhepuls.de/wp-content/uploads/2023/06/Thai-Food-Festival-Karlsruhe.jpg"))
+            dummyData.add(FeedItemModel("https://karlsruhepuls.de/wp-content/uploads/2023/06/Thai-Food-Festival-Karlsruhe.jpg"))
+            dummyData.add(FeedItemModel("https://karlsruhepuls.de/wp-content/uploads/2023/06/Thai-Food-Festival-Karlsruhe.jpg"))
+            dummyData.add(FeedItemModel("https://karlsruhepuls.de/wp-content/uploads/2023/06/Thai-Food-Festival-Karlsruhe.jpg"))
+            dummyData.add(FeedItemModel("https://karlsruhepuls.de/wp-content/uploads/2023/06/Thai-Food-Festival-Karlsruhe.jpg"))
+
             return dummyData
         }
     }

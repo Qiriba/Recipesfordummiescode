@@ -1,3 +1,3 @@
 package com.example.rezeptefuerdummies
 
-data class FeedItemModel(val imageUrl: Int)
+data class FeedItemModel(val imageUrl: String)
