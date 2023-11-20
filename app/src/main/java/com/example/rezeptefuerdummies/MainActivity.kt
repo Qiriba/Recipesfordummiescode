@@ -1,35 +1,42 @@
+package com.example.rezeptefuerdummies
+
+import Rezept
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.rezeptefuerdummies.R
-import com.example.rezeptefuerdummies.RezeptAdapter
 
 
-class MainActivity : AppCompatActivity() {
+    class MainActivity : AppCompatActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+            setContentView(R.layout.activity_main)
 
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
-        setSupportActionBar(toolbar)
-        supportActionBar?.title = "Ihr Titel"
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
+            recyclerView.layoutManager = LinearLayoutManager(this)
 
-        val recyclerView: RecyclerView = findViewById(R.id.recyclerViewRezepte)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = RezeptAdapter(getBeispielRezepte())
+            // Create a list of feed items (replace this with your data)
+            val feedItemList: List<FeedItemModel> = createDummyData()
 
+            // Create and set the adapter
+            val adapter = FeedAdapter(feedItemList)
+            recyclerView.adapter = adapter
+        }
+
+        // Replace this method with your actual data source
+        private fun createDummyData(): List<FeedItemModel> {
+            val dummyData = mutableListOf<FeedItemModel>()
+
+            // Add your feed items to the list
+            dummyData.add(FeedItemModel(R.drawable.mutyez))
+            dummyData.add(FeedItemModel(R.drawable.mutyez))
+            dummyData.add(FeedItemModel(R.drawable.mutyez))
+            dummyData.add(FeedItemModel(R.drawable.mutyez))
+            dummyData.add(FeedItemModel(R.drawable.mutyez))
+            return dummyData
+        }
     }
-    private fun getBeispielRezepte(): List<Rezept> {
 
-        return listOf(
-            Rezept("Spaghetti Bolognese"),
-            Rezept("Caprese Salat"),
-            Rezept("Schokoladenkuchen")
 
-        )
-    }
-}
