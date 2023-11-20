@@ -12,21 +12,18 @@
         android:elevation="4dp"
         android:theme="?attr/actionBarTheme" />
 
-    <!-- RecyclerView für die Liste der Rezepte -->
-
-    <!-- Your layout file (e.g., activity_main.xml) -->
-    <!-- activity_main.xml -->
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="8dp"
-            android:clipToPadding="false"
-            android:clipChildren="false" />
+            android:clipChildren="true"
+            android:clipToPadding="true"
+            android:padding="8dp" />
 
     </RelativeLayout>
 

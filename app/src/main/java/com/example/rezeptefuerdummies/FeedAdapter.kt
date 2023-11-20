@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 
@@ -31,6 +32,10 @@ class FeedAdapter(private val feedItemList: MutableList<FeedItemModel>) :
         // Declare your views for the item layout
         // For example:
         private val imageView: ImageView = itemView.findViewById(R.id.imageView)
+        private val tvRecipeName: TextView = itemView.findViewById(R.id.tvRecipeName)
+        private val tvRecipeDifficulty: TextView = itemView.findViewById(R.id.tvRecipeDifficulty)
+        private val tvRecipeTime: TextView = itemView.findViewById(R.id.tvRecipeTime)
+        private val tvCategory: TextView = itemView.findViewById(R.id.tvRecipeCategory)
 
         init {
             // Set an OnClickListener for the ImageView
@@ -42,6 +47,7 @@ class FeedAdapter(private val feedItemList: MutableList<FeedItemModel>) :
                     val clickedItem = feedItemList[position]
                     // Handle the click on the clickedItem
                     // For example, you might open a detailed view or perform some action
+
                 }
             }
         }
@@ -50,8 +56,12 @@ class FeedAdapter(private val feedItemList: MutableList<FeedItemModel>) :
         fun bind(item: FeedItemModel) {
             // Load the image into imageView
             Picasso.get().load(item.imageUrl).into(imageView)
-        }
+            tvCategory.text = item.recipeCategory
+            tvRecipeName.text = item.recipeName
+            tvRecipeTime.text = item.recipeTime
+            tvRecipeDifficulty.text = item.recipeDifficulty
 
+        }
     }
     fun addItems(newItems: List<FeedItemModel>) {
         feedItemList.addAll(newItems)

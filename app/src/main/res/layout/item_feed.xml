@@ -3,9 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
-
-    <!-- Your item content here -->
+    android:paddingBottom="15sp">
+        <!-- Your item content here -->
     <ImageView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/imageView"
@@ -14,4 +13,49 @@
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_launcher_foreground" />
+
+    <LinearLayout
+        android:paddingTop="10sp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvRecipeCategory"
+            android:layout_width="379dp"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textColor="#666666"
+            android:textAllCaps="true"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/tvRecipeName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textStyle="bold"
+            android:textSize="22sp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvRecipeTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="4"
+                android:text="TextView" />
+
+            <TextView
+                android:id="@+id/tvRecipeDifficulty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="TextView" />
+        </LinearLayout>
+
+    </LinearLayout>
 </LinearLayout>
