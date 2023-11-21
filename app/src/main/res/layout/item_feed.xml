@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingBottom="15sp">
+    android:paddingBottom="55sp">
         <!-- Your item content here -->
     <ImageView
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -47,13 +47,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="4"
-                android:text="TextView" />
+                android:text="TextView"
+                android:drawableLeft="@drawable/schedule"
+                android:drawablePadding="2sp"
+                />
 
             <TextView
                 android:id="@+id/tvRecipeDifficulty"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:drawableLeft="@drawable/signal_cellular_alt"
+                android:drawablePadding="2sp"
                 android:text="TextView" />
         </LinearLayout>
 
