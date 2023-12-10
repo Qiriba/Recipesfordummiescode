@@ -38,15 +38,11 @@ class FeedAdapter(private val feedItemList: MutableList<FeedItemModel>) :
         private val tvCategory: TextView = itemView.findViewById(R.id.tvRecipeCategory)
 
         init {
-            // Set an OnClickListener for the ImageView
             imageView.setOnClickListener {
-                // Handle the click event here
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
                     // Ensure that the position is valid
                     val clickedItem = feedItemList[position]
-                    // Handle the click on the clickedItem
-                    // For example, you might open a detailed view or perform some action
 
                 }
             }

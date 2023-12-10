@@ -36,6 +36,7 @@ android {
 }
 
 dependencies {
+    implementation("com.simplecityapps:recyclerview-fastscroll:1.0.27")
     implementation("com.squareup.picasso:picasso:2.8")
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
