@@ -31,11 +31,11 @@ class FeedAdapter(private val feedItemList: MutableList<FeedItemModel>) :
     inner class FeedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         // Declare your views for the item layout
         // For example:
-        private val imageView: ImageView = itemView.findViewById(R.id.imageView)
-        private val tvRecipeName: TextView = itemView.findViewById(R.id.tvRecipeName)
-        private val tvRecipeDifficulty: TextView = itemView.findViewById(R.id.tvRecipeDifficulty)
-        private val tvRecipeTime: TextView = itemView.findViewById(R.id.tvRecipeTime)
-        private val tvCategory: TextView = itemView.findViewById(R.id.tvRecipeCategory)
+        private val BildView: ImageView = itemView.findViewById(R.id.imageView)
+        private val RezeptName: TextView = itemView.findViewById(R.id.tvRecipeName)
+        private val RezeptDifficulty: TextView = itemView.findViewById(R.id.tvRecipeDifficulty)
+        private val RezeptTime: TextView = itemView.findViewById(R.id.tvRecipeTime)
+        private val RezeptCategory: TextView = itemView.findViewById(R.id.tvRecipeCategory)
 
         init {
             imageView.setOnClickListener {
