@@ -9,11 +9,14 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.squareup.picasso.Picasso
 
-class FeedAdapter(private val feedItemList: MutableList<FeedItemModel>) :
-    RecyclerView.Adapter<FeedAdapter.FeedViewHolder>() {
+ class FeedAdapter(private val feedItemList: MutableList<FeedItemModel>) :
+     RecyclerView.Adapter<FeedAdapter.FeedViewHolder>() {
+
+     private var onItemClickListener: OnItemClickListener? = null
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedViewHolder {
+
+     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_feed, parent, false)
         return FeedViewHolder(view)
     }
@@ -26,6 +29,9 @@ class FeedAdapter(private val feedItemList: MutableList<FeedItemModel>) :
         holder.bind(currentItem)
     }
 
+    interface OnItemClickListener {
+        fun onItemClick(feedItem: FeedItemModel)
+    }
     override fun getItemCount(): Int = feedItemList.size
 
     inner class FeedViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -43,6 +49,7 @@ class FeedAdapter(private val feedItemList: MutableList<FeedItemModel>) :
                 if (position != RecyclerView.NO_POSITION) {
                     // Ensure that the position is valid
                     val clickedItem = feedItemList[position]
+                    onItemClickListener?.onItemClick(clickedItem)
 
                 }
             }
@@ -58,6 +65,9 @@ class FeedAdapter(private val feedItemList: MutableList<FeedItemModel>) :
             tvRecipeDifficulty.text = item.recipeDifficulty
 
         }
+    }
+    fun setOnItemClickListener(listener: OnItemClickListener) {
+        onItemClickListener = listener
     }
     fun addItems(newItems: List<FeedItemModel>) {
         feedItemList.addAll(newItems)

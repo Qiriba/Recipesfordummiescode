@@ -7,6 +7,9 @@ android {
     namespace = "com.example.rezeptefuerdummies"
     compileSdk = 34
 
+    buildFeatures {
+        dataBinding = true
+    }
     defaultConfig {
         applicationId = "com.example.rezeptefuerdummies"
         minSdk = 21

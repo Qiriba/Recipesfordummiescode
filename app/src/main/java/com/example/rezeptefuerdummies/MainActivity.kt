@@ -1,10 +1,15 @@
 package com.example.rezeptefuerdummies
 
+import com.example.rezeptefuerdummies.RecipeDetailsActivity
+
 import Rezept
 import android.Manifest
+
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
@@ -13,8 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 
-    class MainActivity : AppCompatActivity() {
-
+class MainActivity : AppCompatActivity(), FeedAdapter.OnItemClickListener {
 
         companion object {
             private const val REQUEST_CODE_POST_NOTIFICATIONS = 101
@@ -30,6 +34,7 @@ import androidx.recyclerview.widget.RecyclerView
 
             // Create and set the adapter
             val adapter = FeedAdapter(feedItemList)
+            adapter.setOnItemClickListener(this)
             recyclerView.adapter = adapter
 
             recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -51,8 +56,17 @@ import androidx.recyclerview.widget.RecyclerView
             })
             requestPostNotificationPermission()
         }
+    override fun onItemClick(feedItem: FeedItemModel) {
+        val intent = Intent(this, RecipeDetailsActivity::class.java).apply {
+            putExtra("id", feedItem.recipeID)
+        }
+        startActivity(intent)
+    }
 
-        private fun requestPostNotificationPermission() {
+
+
+
+    private fun requestPostNotificationPermission() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
                     // Permission is not granted, request it
