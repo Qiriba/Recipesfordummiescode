@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("org.sonarqube") version "5.0.0.4638"
 }
 
 android {
@@ -38,6 +39,12 @@ android {
     }
 }
 
+sonar {
+  properties {
+    property("sonar.projectKey", "RezepteForDummies")
+    property("sonar.projectName", "RezepteForDummies")
+  }
+}
 dependencies {
     implementation("com.squareup.picasso:picasso:2.8")
     implementation("androidx.core:core-ktx:1.9.0")
