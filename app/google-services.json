@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "907206890923",
+    "firebase_url": "https://rezepte-for-dummies-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "rezepte-for-dummies",
+    "storage_bucket": "rezepte-for-dummies.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:907206890923:android:58ce9881334ce00f53aeee",
+        "android_client_info": {
+          "package_name": "com.example.rezeptefuerdummies"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCZ7C0crYbEZnvRXWUWO4-BmWcS5_q4jo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
