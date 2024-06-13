@@ -8,6 +8,7 @@ class StartRecipeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_start_recipe)
 
-        // Hier kannst du weitere Initialisierungen vornehmen
+        val recipeID = intent.getStringExtra("id")
+
     }
 }

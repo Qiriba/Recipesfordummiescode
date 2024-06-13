@@ -17,7 +17,10 @@ class RecipeDetailsActivity : AppCompatActivity() {
 
         val startRecipeButton = findViewById<Button>(R.id.startRecipeButton)
         startRecipeButton.setOnClickListener {
-            val intent = Intent(this, StartRecipeActivity::class.java)
+            val intent = Intent(this, StartRecipeActivity::class.java).apply {
+                putExtra("id", intent.getStringExtra("id"))
+
+            }
             startActivity(intent)
         }
 
@@ -28,6 +31,7 @@ class RecipeDetailsActivity : AppCompatActivity() {
         val recipeCategory = intent.getStringExtra("category")
         val recipeImageResId = intent.getStringExtra("imageUrl")
         val recipeDescription = intent.getStringExtra("description")
+        val recipeID = intent.getStringExtra("id")
 
         // Get references to the views
         val recipeImageView = findViewById<ImageView>(R.id.ard_imageView)
@@ -44,10 +48,4 @@ class RecipeDetailsActivity : AppCompatActivity() {
         recipeCategoryTextView.text = "Category: $recipeCategory"
         recipeDescriptionTextView.text = "$recipeDescription"
     }
-    fun startRecipeButtonClick(view: View) {
-        val intent = Intent(this, StartRecipeActivity::class.java)
-        startActivity(intent)
-    }
-
-
 }

@@ -74,6 +74,7 @@ class MainActivity : AppCompatActivity(), FeedAdapter.OnItemClickListener {
             putExtra("category", feedItem.recipeCategory)
             putExtra("imageUrl", feedItem.imageUrl)
             putExtra("description", feedItem.recipeDescription)
+            putExtra("id", feedItem.recipeID)
         }
         startActivity(intent)
     }
