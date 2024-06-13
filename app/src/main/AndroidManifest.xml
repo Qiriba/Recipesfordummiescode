@@ -24,6 +24,10 @@
             android:name=".RecipeDetailsActivity"
             android:exported="true">
         </activity>
+        <activity
+            android:name=".StartRecipeActivity"
+            android:exported="true">
+        </activity>
 
     </application>
     <uses-permission android:name="android.permission.INTERNET" />

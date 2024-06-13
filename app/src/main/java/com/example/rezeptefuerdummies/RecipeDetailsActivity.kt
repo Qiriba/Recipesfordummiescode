@@ -3,6 +3,9 @@ package com.example.rezeptefuerdummies
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Button
+import android.content.Intent
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.squareup.picasso.Picasso
 
@@ -12,7 +15,13 @@ class RecipeDetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recipe_details)
 
-        // Dummy data for the recipe
+        val startRecipeButton = findViewById<Button>(R.id.startRecipeButton)
+        startRecipeButton.setOnClickListener {
+            val intent = Intent(this, StartRecipeActivity::class.java)
+            startActivity(intent)
+        }
+
+        // Data for the recipe
         val recipeName = intent.getStringExtra("name")
         val recipeDifficulty = intent.getStringExtra("difficulty")
         val recipeTime = intent.getStringExtra("time")
@@ -34,6 +43,10 @@ class RecipeDetailsActivity : AppCompatActivity() {
         recipeTimeTextView.text = "Time: $recipeTime"
         recipeCategoryTextView.text = "Category: $recipeCategory"
         recipeDescriptionTextView.text = "$recipeDescription"
+    }
+    fun startRecipeButtonClick(view: View) {
+        val intent = Intent(this, StartRecipeActivity::class.java)
+        startActivity(intent)
     }
 
 
