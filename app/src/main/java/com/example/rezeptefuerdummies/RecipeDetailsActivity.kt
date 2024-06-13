@@ -17,7 +17,8 @@ class RecipeDetailsActivity : AppCompatActivity() {
         val recipeDifficulty = intent.getStringExtra("difficulty")
         val recipeTime = intent.getStringExtra("time")
         val recipeCategory = intent.getStringExtra("category")
-        val recipeImageResId = intent.getStringExtra("imageUrl") // Replace with actual image resource
+        val recipeImageResId = intent.getStringExtra("imageUrl")
+        val recipeDescription = intent.getStringExtra("description")
 
         // Get references to the views
         val recipeImageView = findViewById<ImageView>(R.id.ard_imageView)
@@ -25,12 +26,14 @@ class RecipeDetailsActivity : AppCompatActivity() {
         val recipeDifficultyTextView = findViewById<TextView>(R.id.ard_recipeDifficulty)
         val recipeTimeTextView = findViewById<TextView>(R.id.ard_recipeTime)
         val recipeCategoryTextView = findViewById<TextView>(R.id.ard_recipeCategory)
+        val recipeDescriptionTextView = findViewById<TextView>(R.id.ard_recipeDescription)
 
         Picasso.get().load(recipeImageResId).into(recipeImageView)
         recipeNameTextView.text = "$recipeName"
         recipeDifficultyTextView.text = "Difficulty: $recipeDifficulty"
         recipeTimeTextView.text = "Time: $recipeTime"
         recipeCategoryTextView.text = "Category: $recipeCategory"
+        recipeDescriptionTextView.text = "$recipeDescription"
     }
 
 
