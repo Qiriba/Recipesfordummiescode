@@ -2,6 +2,7 @@ package com.example.rezeptefuerdummies
 
 import android.os.Bundle
 import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 
 class StartRecipeActivity : AppCompatActivity() {
@@ -18,9 +19,11 @@ class StartRecipeActivity : AppCompatActivity() {
         }
 
         val prevButton = findViewById<Button>(R.id.asr_prevButton)
-        nextButton.setOnClickListener {
+        prevButton.setOnClickListener {
             prevButtonClick()
         }
+        val titleTV = findViewById<TextView>(R.id.asr_titleTextView)
+        val stepTV = findViewById<TextView>(R.id.asr_stepTextView)
     }
 
     fun nextButtonClick(){
