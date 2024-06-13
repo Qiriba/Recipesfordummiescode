@@ -5,11 +5,15 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.firestore.firestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 
 class MainActivity : AppCompatActivity(), FeedAdapter.OnItemClickListener {
@@ -25,6 +29,15 @@ class MainActivity : AppCompatActivity(), FeedAdapter.OnItemClickListener {
             recyclerView.layoutManager = LinearLayoutManager(this)
             // Create a list of feed items (replace this with your data)
             val feedItemList: MutableList<FeedItemModel> = createDummyData()
+
+            val db = Firebase.firestore
+            db.collection("rezepte")
+                .get()
+                .addOnSuccessListener {result ->
+                    for(doc in result){
+                        Log.d("Firestore", "id: ${doc.id} - data: ${doc.data}")
+                    }
+                }
 
             // Create and set the adapter
             val adapter = FeedAdapter(feedItemList)
