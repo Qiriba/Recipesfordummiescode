@@ -1,18 +1,56 @@
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp">
 
-    <TextView
-        android:id="@+id/textViewId"
-        android:layout_width="wrap_content"
+    <!-- Recipe Image -->
+    <ImageView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/ard_imageView"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Recipe ID: "
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:layout_marginTop="16dp"/>
+        android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_launcher_foreground" />
+
+    <!-- Recipe Name -->
+    <TextView
+        android:id="@+id/ard_recipeName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Recipe Name"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <!-- Recipe Difficulty -->
+    <TextView
+        android:id="@+id/ard_recipeDifficulty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Difficulty: Medium"
+        android:textSize="16sp" />
+
+    <!-- Recipe Time -->
+    <TextView
+        android:id="@+id/ard_recipeTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Time: 30 mins"
+        android:textSize="16sp" />
+
+    <!-- Recipe Category -->
+    <TextView
+        android:id="@+id/ard_recipeCategory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Category: Dessert"
+        android:textSize="16sp" />
 
 </LinearLayout>
-</layout>

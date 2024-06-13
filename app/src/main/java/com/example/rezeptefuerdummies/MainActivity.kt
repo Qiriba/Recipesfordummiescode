@@ -1,17 +1,11 @@
 package com.example.rezeptefuerdummies
 
-import com.example.rezeptefuerdummies.RecipeDetailsActivity
-
-import Rezept
 import android.Manifest
-
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -58,7 +52,11 @@ class MainActivity : AppCompatActivity(), FeedAdapter.OnItemClickListener {
         }
     override fun onItemClick(feedItem: FeedItemModel) {
         val intent = Intent(this, RecipeDetailsActivity::class.java).apply {
-            putExtra("id", feedItem.recipeID)
+            putExtra("name", feedItem.recipeName)
+            putExtra("time", feedItem.recipeTime)
+            putExtra("difficulty", feedItem.recipeDifficulty)
+            putExtra("category", feedItem.recipeCategory)
+            putExtra("imageUrl", feedItem.imageUrl)
         }
         startActivity(intent)
     }
