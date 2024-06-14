@@ -1,6 +1,7 @@
 package com.example.rezeptefuerdummies
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -8,10 +9,14 @@ import androidx.appcompat.app.AppCompatActivity
 class StartRecipeActivity : AppCompatActivity() {
     var currentStepIndex = 0
     var stepArray = emptyArray<stepItem>()
-    val recipeID = intent.getStringExtra("id")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_start_recipe)
+
+        val recipeID = intent.getIntExtra("id",0)
+        Log.e(recipeID.toString(),"Recipe ID RecipeStartRecipe"+recipeID)
+
 
         val nextButton = findViewById<Button>(R.id.asr_nextButton)
         nextButton.setOnClickListener {

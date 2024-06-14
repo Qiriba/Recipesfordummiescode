@@ -44,6 +44,8 @@ class MainActivity : AppCompatActivity(), FeedAdapter.OnItemClickListener {
             feedItemList.addAll(data)
             adapter.notifyDataSetChanged()
         }
+        fetchAndLogIngredients(db)
+
 
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -68,15 +70,16 @@ class MainActivity : AppCompatActivity(), FeedAdapter.OnItemClickListener {
 
     override fun onItemClick(feedItem: FeedItemModel) {
         val intent = Intent(this, RecipeDetailsActivity::class.java).apply {
+            putExtra("id", feedItem.recipeID)
             putExtra("name", feedItem.recipeName)
             putExtra("time", feedItem.recipeTime)
             putExtra("difficulty", feedItem.recipeDifficulty)
             putExtra("category", feedItem.recipeCategory)
             putExtra("imageUrl", feedItem.imageUrl)
             putExtra("description", feedItem.recipeDescription)
-            putExtra("id", feedItem.recipeID)
         }
         startActivity(intent)
+
     }
 
     private fun requestPostNotificationPermission() {
@@ -114,6 +117,8 @@ class MainActivity : AppCompatActivity(), FeedAdapter.OnItemClickListener {
                     val recipeCategory = doc.getString("recipeCategory") ?: ""
                     val imageUrl = doc.getString("imageUrl") ?: ""
                     val id = doc.getLong("recipeID")?.toInt() ?: 0
+                    Log.e(id.toString(),"Recipe ID"+id)
+
                     val recipeDescription = doc.getString("recipeDescription") ?: ""
 
                     // Create a FeedItemModel and add it to the list
@@ -121,6 +126,18 @@ class MainActivity : AppCompatActivity(), FeedAdapter.OnItemClickListener {
                     feedItemList.add(feedItem)
                 }
                 callback(feedItemList)
+            }
+    }
+    private fun fetchAndLogIngredients(db: FirebaseFirestore) {
+        db.collection("rezepte_zutaten")
+            .get()
+            .addOnSuccessListener { result ->
+                for (document in result) {
+                    Log.d("Firestore", "Ingredient id: ${document.id} => data: ${document.data}")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w("Firestore", "Error getting ingredients: ", exception)
             }
     }
 
