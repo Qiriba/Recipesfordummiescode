@@ -17,7 +17,7 @@ class ExampleUnitTest {
         assertEquals(adapter.getItemId(1), -693801673)
         assertEquals(adapter.getItemId(0), 1117640830)
     }
-
+    /*
     fun createDummyData(): MutableList<FeedItemModel> {
         val dummyData = mutableListOf<FeedItemModel>()
 
@@ -29,4 +29,5 @@ class ExampleUnitTest {
         dummyData.add(FeedItemModel("https://img.chefkoch-cdn.de/rezepte/2529831396465550/bilder/1509532/crop-960x720/pfannkuchen-crepe-und-pancake.jpg", "Omas Pfannkuchen", "Easy", "20 Min", "Vegetarisch", 5))
         return dummyData
     }
+    */
 }
