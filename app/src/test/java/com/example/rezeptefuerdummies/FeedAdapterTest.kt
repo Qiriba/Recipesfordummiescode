@@ -24,8 +24,8 @@ class FeedAdapterTest {
     fun setUp() {
         // Prepare the feed item list
         feedItems = mutableListOf(
-            FeedItemModel("Image_Url_1", "Chicken Soup", "Easy", "30 mins", "Soup", 1),
-            FeedItemModel("Image_Url_2", "Beef Stew", "Hard", "45 mins", "Main Course", 2)
+            FeedItemModel("Image_Url_1", "Chicken Soup", "Easy", "30 mins", "Soup", 1,"example"),
+            FeedItemModel("Image_Url_2", "Beef Stew", "Hard", "45 mins", "Main Course", 2,"example")
         )
         adapter = FeedAdapter(feedItems)
 
@@ -51,7 +51,7 @@ class FeedAdapterTest {
     @Test
     fun `addItems adds items and notifies adapter`() {
         val newItems = listOf(
-            FeedItemModel("image_url_3", "Veggie Pasta", "Medium", "25 mins", "Pasta", 3)
+            FeedItemModel("image_url_3", "Veggie Pasta", "Medium", "25 mins", "Pasta", 3,"")
         )
         adapter.addItems(newItems)
 
