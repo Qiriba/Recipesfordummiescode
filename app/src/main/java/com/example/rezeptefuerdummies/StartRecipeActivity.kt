@@ -87,11 +87,18 @@ class StartRecipeActivity : AppCompatActivity() {
         currentStepIndex = currentStepIndex.coerceIn(0, stepArray.size - 1)
         // Hier den Text im TextView basierend auf currentStepIndex und stepArray aktualisieren
         if (currentStepIndex < stepArray.size) {
-            stepTextView.text = stepArray[currentStepIndex].content
+            Log.d("Firestore", "Updating stepTextView to: ${stepArray[currentStepIndex].content}")
+            runOnUiThread {
+                stepTextView.text = stepArray[currentStepIndex].content
+            }
         } else {
-            stepTextView.text = "No steps available."
+            Log.d("Firestore", "No steps available. Updating stepTextView to default message.")
+            runOnUiThread {
+                stepTextView.text = "No steps available."
+            }
         }
     }
+
 
     private fun nextButtonClick() {
         currentStepIndex++
