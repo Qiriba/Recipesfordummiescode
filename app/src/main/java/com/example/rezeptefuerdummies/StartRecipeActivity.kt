@@ -4,10 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.firestore.FirebaseFirestore
+import com.squareup.picasso.Picasso
 
 class StartRecipeActivity : AppCompatActivity() {
 
@@ -15,6 +17,7 @@ class StartRecipeActivity : AppCompatActivity() {
 
     private lateinit var titleTextView: TextView
     private lateinit var stepTextView: TextView
+    private lateinit var imageView: ImageView
     private lateinit var nextButton: Button
     private lateinit var prevButton: Button
 
@@ -27,6 +30,7 @@ class StartRecipeActivity : AppCompatActivity() {
 
         titleTextView = findViewById(R.id.asr_titleTextView)
         stepTextView = findViewById(R.id.asr_stepTextView)
+        imageView = findViewById(R.id.asr_imageView)
         nextButton = findViewById(R.id.asr_nextButton)
         prevButton = findViewById(R.id.asr_prevButton)
 
@@ -91,11 +95,17 @@ class StartRecipeActivity : AppCompatActivity() {
         // Hier den Text im TextView basierend auf currentStepIndex und stepArray aktualisieren
         if (currentStepIndex < stepArray.size) {
             Log.d("Firestore", "Updating stepTextView to: ${stepArray[currentStepIndex].content}")
+            val step = stepArray[currentStepIndex]
+
             runOnUiThread {
-                stepTextView.text = stepArray[currentStepIndex].content
-                titleTextView.text = stepArray[currentStepIndex].name
+                stepTextView.text = step.content
+                titleTextView.text = step.name
 
-
+                if (step.imageUrl.isNotEmpty()) {
+                    Picasso.get()
+                        .load(step.imageUrl)
+                        .into(imageView)
+                }
             }
 
             // Überprüfen, ob der nächste Schritt der letzte Schritt ist
@@ -103,12 +113,15 @@ class StartRecipeActivity : AppCompatActivity() {
                 runOnUiThread {
                     nextButton.text = "Finish"
                     nextButton.setOnClickListener {
-                        endRecipe()
+                        showFinishConfirmationDialog()
                     }
                 }
             } else {
                 runOnUiThread {
                     nextButton.text = "Next"
+                    nextButton.setOnClickListener {
+                        nextButtonClick()
+                    }
                 }
             }
         } else {
