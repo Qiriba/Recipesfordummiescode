@@ -23,15 +23,12 @@
         android:id="@+id/asr_stepTextView"
         android:layout_width="375dp"
         android:layout_height="580dp"
+        android:layout_marginBottom="376dp"
         android:text="Step will appear here"
         android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/asr_nextButton"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.833"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/asr_titleTextView"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/asr_nextButton"

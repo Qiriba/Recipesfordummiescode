@@ -5,38 +5,101 @@ import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.firestore.FirebaseFirestore
 
 class StartRecipeActivity : AppCompatActivity() {
-    var currentStepIndex = 0
-    var stepArray = emptyArray<stepItem>()
+
+    // Firebase Firestore Instanz
+    private val db = FirebaseFirestore.getInstance()
+
+    private lateinit var titleTextView: TextView
+    private lateinit var stepTextView: TextView
+    private lateinit var nextButton: Button
+    private lateinit var prevButton: Button
+
+    private var currentStepIndex = 0
+    private var stepArray = emptyList<StepItem>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_start_recipe)
 
-        val recipeID = intent.getIntExtra("id",0)
-        Log.e(recipeID.toString(),"Recipe ID RecipeStartRecipe"+recipeID)
+        titleTextView = findViewById(R.id.asr_titleTextView)
+        stepTextView = findViewById(R.id.asr_stepTextView)
+        nextButton = findViewById(R.id.asr_nextButton)
+        prevButton = findViewById(R.id.asr_prevButton)
 
-
-        val nextButton = findViewById<Button>(R.id.asr_nextButton)
         nextButton.setOnClickListener {
             nextButtonClick()
         }
 
-        val prevButton = findViewById<Button>(R.id.asr_prevButton)
         prevButton.setOnClickListener {
             prevButtonClick()
         }
-        val titleTV = findViewById<TextView>(R.id.asr_titleTextView)
-        val stepTV = findViewById<TextView>(R.id.asr_stepTextView)
+
+        val recipeID = intent.getIntExtra("id", 0)
+        Log.e("Recipe ID", "RecipeStartRecipe $recipeID")
+
+        fetchStepsFromFirestore()
     }
 
-    fun nextButtonClick(){
+    private fun fetchStepsFromFirestore() {
+        // Firestore Abfrage für die Sammlung "rezepte_step"
+        db.collection("rezepte_step")
+            .get()
+            .addOnSuccessListener { result ->
+                if (result.isEmpty) {
+                    Log.d("Firestore", "No documents found.")
+                    return@addOnSuccessListener
+                }
+
+                for (document in result) {
+                    Log.d("Firestore", "Document ID: ${document.id}")
+
+                    // Annahme der Struktur, dass "step" eine Liste von Maps ist
+                    val steps = document.get("step") as? List<Map<String, Any>>
+
+                    steps?.let {
+                        stepArray = it.map { stepData ->
+                            val imageUrl = stepData["imageURL"] as? String ?: ""
+                            val title = stepData["title"] as? String ?: ""
+                            val content = stepData["content"] as? String ?: ""
+                            StepItem(title, imageUrl, content)
+                        }
+                        Log.d("Firestore", "Steps loaded successfully: $stepArray")
+                        updateStepTextView()
+                    }
+
+                    if (stepArray.isEmpty()) {
+                        Log.d("Firestore", "No steps available.")
+                        stepTextView.text = "No steps available."
+                    }
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w("Firestore", "Error getting documents: ", exception)
+            }
+    }
+
+
+    private fun updateStepTextView() {
+        // Sicherstellen, dass currentStepIndex gültig bleibt
+        currentStepIndex = currentStepIndex.coerceIn(0, stepArray.size - 1)
+        // Hier den Text im TextView basierend auf currentStepIndex und stepArray aktualisieren
+        if (currentStepIndex < stepArray.size) {
+            stepTextView.text = stepArray[currentStepIndex].content
+        } else {
+            stepTextView.text = "No steps available."
+        }
+    }
+
+    private fun nextButtonClick() {
         currentStepIndex++
+        updateStepTextView()
     }
 
-    fun prevButtonClick(){
+    private fun prevButtonClick() {
         currentStepIndex--
+        updateStepTextView()
     }
-
 }
