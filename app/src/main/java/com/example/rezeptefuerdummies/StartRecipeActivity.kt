@@ -159,23 +159,24 @@ class StartRecipeActivity : AppCompatActivity() {
 
     private fun showTimePickerDialog() {
         val calendar = Calendar.getInstance()
-        val hour = calendar.get(Calendar.HOUR_OF_DAY)
         val minute = calendar.get(Calendar.MINUTE)
+        val second = calendar.get(Calendar.SECOND)
 
         val timePickerDialog = TimePickerDialog(
             this,
-            { _, hourOfDay, minute ->
-                startTimer(hourOfDay, minute)
+            { _, selectedMinute, selectedSecond ->
+                startTimer(selectedMinute, selectedSecond)
             },
-            hour,
             minute,
+            second,
             true
         )
         timePickerDialog.show()
     }
 
-    private fun startTimer(hours: Int, minutes: Int) {
-        val totalTimeInMillis = (hours * 3600 + minutes * 60) * 1000L
+    private fun startTimer(selectedMinutes: Int, selectedSeconds: Int) {
+        // Umrechnung der ausgewählten Minuten und Sekunden in Millisekunden
+        val totalTimeInMillis = (selectedMinutes * 60 + selectedSeconds) * 1000L
 
         countdownTimer?.cancel()
         countdownTimer = object : CountDownTimer(totalTimeInMillis, 1000) {
@@ -187,23 +188,19 @@ class StartRecipeActivity : AppCompatActivity() {
             override fun onFinish() {
                 timeInMillis = 0
                 updateTimerUI()
-                // Hier kann die Logik für die Aktion nach Ablauf des Timers hinzugefügt werden
+                // Hier können Sie die Logik hinzufügen, die nach Ablauf des Timers ausgeführt werden soll
             }
         }.start()
     }
 
     private fun updateTimerUI() {
-        val hours = (timeInMillis / 3600000).toInt()
-        val minutes = ((timeInMillis % 3600000) / 60000).toInt()
+        val minutes = (timeInMillis / 60000).toInt()
         val seconds = ((timeInMillis % 60000) / 1000).toInt()
 
-        val timeString = String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds)
+        val timeString = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
         tvTimer.text = timeString
     }
 
-    private fun endRecipe() {
-        showFinishConfirmationDialog()
-    }
 
     private fun nextButtonClick() {
         currentStepIndex++
