@@ -39,24 +39,18 @@ class StartRecipeActivity : AppCompatActivity() {
 
         val recipeID = intent.getIntExtra("id", 0)
         Log.e("Recipe ID", "RecipeStartRecipe $recipeID")
-
-        fetchStepsFromFirestore()
+        fetchStepsFromFirestore("XjANct78kjI8K5Dq9OMX")
     }
 
-    private fun fetchStepsFromFirestore() {
-        // Firestore Abfrage für die Sammlung "rezepte_step"
-        db.collection("rezepte_step")
+    private fun fetchStepsFromFirestore(documentId: String) {
+        // Firestore query for the specific document in the "rezepte_step" collection
+        db.collection("rezepte_step").document(documentId)
             .get()
-            .addOnSuccessListener { result ->
-                if (result.isEmpty) {
-                    Log.d("Firestore", "No documents found.")
-                    return@addOnSuccessListener
-                }
-
-                for (document in result) {
+            .addOnSuccessListener { document ->
+                if (document != null && document.exists()) {
                     Log.d("Firestore", "Document ID: ${document.id}")
 
-                    // Annahme der Struktur, dass "step" eine Liste von Maps ist
+                    // Assuming the structure that "step" is a list of maps
                     val steps = document.get("step") as? List<Map<String, Any>>
 
                     steps?.let {
@@ -74,12 +68,17 @@ class StartRecipeActivity : AppCompatActivity() {
                         Log.d("Firestore", "No steps available.")
                         stepTextView.text = "No steps available."
                     }
+                } else {
+                    Log.d("Firestore", "No document found with ID: $documentId")
+                    stepTextView.text = "No steps available."
                 }
             }
             .addOnFailureListener { exception ->
-                Log.w("Firestore", "Error getting documents: ", exception)
+                Log.w("Firestore", "Error getting document: ", exception)
             }
     }
+
+
 
 
     private fun updateStepTextView() {
