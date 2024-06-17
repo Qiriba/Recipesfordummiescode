@@ -102,7 +102,9 @@ class StartRecipeActivity : AppCompatActivity() {
             if (currentStepIndex == stepArray.size - 1) {
                 runOnUiThread {
                     nextButton.text = "Finish"
-                    endRecipe()
+                    nextButton.setOnClickListener {
+                        endRecipe()
+                    }
                 }
             } else {
                 runOnUiThread {
@@ -153,5 +155,8 @@ class StartRecipeActivity : AppCompatActivity() {
     private fun prevButtonClick() {
         currentStepIndex--
         updateStepTextView()
+        nextButton.setOnClickListener {
+            nextButtonClick()
+        }
     }
 }
