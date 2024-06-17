@@ -65,34 +65,31 @@ class RecipeDetailsActivity : AppCompatActivity() {
 // Logging to ensure recipeID is correctly set
         Log.d("Firestore Debug", "Querying for recipeID: $recipeID")
 
-        db.collection("rezepte_zutaten")
-            .whereEqualTo("recipeID", recipeID)
+        db.collection("rezepte_zutaten").document("2M6CFmrAArwCtSzoVtB5")
             .get()
-            .addOnSuccessListener { result ->
+            .addOnSuccessListener { document ->
                 val ingredientsList = mutableListOf<FeedIngredientModel>()
 
-                // Check if any documents were returned
-                if (result.isEmpty) {
-                    Log.d("Firestore Recipe", "No ingredients found for recipeID: $recipeID")
-                } else {
-                    for (document in result) {
-                        Log.d("Firestore Recipe", "Document id: ${document.id} => data: ${document.data}")
-                        val ingredientsArray = document.get("rezepte_zutaten") as? List<Map<String, Any>> ?: emptyList()
+                if (document != null && document.exists()) {
+                    Log.d("Firestore Recipe", "Document id: ${document.id} => data: ${document.data}")
+                    val ingredientsArray = document.get("rezepte_zutaten") as? List<Map<String, Any>> ?: emptyList()
 
-                        for (ingredientData in ingredientsArray) {
-                            val amount = ingredientData["amount"] as? String ?: ""
-                            val name = ingredientData["name"] as? String ?: ""
-                            val needed = ingredientData["needed"] as? Boolean ?: false
+                    for (ingredientData in ingredientsArray) {
+                        val amount = ingredientData["amount"] as? String ?: ""
+                        val name = ingredientData["name"] as? String ?: ""
+                        val needed = ingredientData["needed"] as? Boolean ?: false
 
-                            val ingredient = FeedIngredientModel(amount, name, needed)
-                            ingredientsList.add(ingredient)
-                        }
+                        val ingredient = FeedIngredientModel(amount, name, needed)
+                        ingredientsList.add(ingredient)
                     }
 
                     // Show ingredients in TextView (just as an example)
                     recipeingredientsView.text = ingredientsList.joinToString("\n") {
                         "${it.amount} ${it.name}"
                     }
+                } else {
+                    Log.d("Firestore Recipe", "No ingredients found for document ID:")
+                    recipeingredientsView.text = "No ingredients available."
                 }
             }
             .addOnFailureListener { exception ->
