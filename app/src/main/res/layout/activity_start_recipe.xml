@@ -25,7 +25,7 @@
         android:id="@+id/asr_stepTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="184dp"
+        android:layout_marginTop="18dp"
         android:scrollbars="vertical"
         android:text="Step will appear here"
         android:textSize="18sp"
