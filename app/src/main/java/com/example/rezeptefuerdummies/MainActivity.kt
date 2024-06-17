@@ -6,7 +6,10 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
+import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,30 +26,66 @@ class MainActivity : AppCompatActivity(), FeedAdapter.OnItemClickListener {
         private const val REQUEST_CODE_POST_NOTIFICATIONS = 101
     }
 
+    private lateinit var searchView: SearchView
+    private lateinit var feedAdapter: FeedAdapter
+    private lateinit var searchAdapter: FeedAdapter
+    private var feedItemList: MutableList<FeedItemModel> = mutableListOf()
+    private var searchItemList: MutableList<FeedItemModel> = mutableListOf()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
+        val searchRecyclerView: RecyclerView = findViewById(R.id.search_recyclerView)
+        searchRecyclerView.visibility = View.GONE
+        searchRecyclerView.layoutManager = LinearLayoutManager(this)
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false) // Hide default title
+
+        searchView = SearchView(toolbar.context)
+        toolbar.addView(searchView)
+
+        searchView.setOnQueryTextFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                recyclerView.visibility = View.GONE
+                searchRecyclerView.visibility = View.VISIBLE
+            } else {
+                searchRecyclerView.visibility = View.GONE
+                recyclerView.visibility = View.VISIBLE
+            }
+        }
 
         // Create an empty list for feed items
-        val feedItemList: MutableList<FeedItemModel> = mutableListOf()
-
+        var searchItemList: MutableList<FeedItemModel> = mutableListOf()
         // Create and set the adapter
-        val adapter = FeedAdapter(feedItemList)
-        adapter.setOnItemClickListener(this)
-        recyclerView.adapter = adapter
+        feedAdapter = FeedAdapter(feedItemList)
+        feedAdapter.setOnItemClickListener(this)
+        recyclerView.adapter = feedAdapter
+
+        searchAdapter = FeedAdapter(searchItemList)
+        searchAdapter.setOnItemClickListener(this)
+        searchRecyclerView.adapter = searchAdapter
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                searchItemList = feedItemList
+                filterData(newText)
+                return true
+            }
+        })
 
         // Firestore instance
         val db = Firebase.firestore
         getDatabaseData(db,"rezepte") { data ->
             feedItemList.addAll(data)
-            adapter.notifyDataSetChanged()
+            feedAdapter.notifyDataSetChanged()
         }
-        fetchAndLogIngredients(db)
-
-
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -80,6 +119,18 @@ class MainActivity : AppCompatActivity(), FeedAdapter.OnItemClickListener {
         }
         startActivity(intent)
 
+    }
+
+    private fun filterData(query: String?) {
+        if (query.isNullOrBlank()) {
+            searchAdapter.setItems(feedItemList) // Show all items if query is empty
+        } else {
+            val filteredList = feedItemList.filter { item ->
+                // Filter based on the recipeName field (you can adjust this to any other field if needed)
+                item.recipeName.contains(query, ignoreCase = true)
+            }
+            searchAdapter.setItems(filteredList)
+        }
     }
 
     private fun requestPostNotificationPermission() {
@@ -126,18 +177,6 @@ class MainActivity : AppCompatActivity(), FeedAdapter.OnItemClickListener {
                     feedItemList.add(feedItem)
                 }
                 callback(feedItemList)
-            }
-    }
-    private fun fetchAndLogIngredients(db: FirebaseFirestore) {
-        db.collection("rezepte_zutaten")
-            .get()
-            .addOnSuccessListener { result ->
-                for (document in result) {
-                    Log.d("Firestore", "Ingredient id: ${document.id} => data: ${document.data}")
-                }
-            }
-            .addOnFailureListener { exception ->
-                Log.w("Firestore", "Error getting ingredients: ", exception)
             }
     }
 

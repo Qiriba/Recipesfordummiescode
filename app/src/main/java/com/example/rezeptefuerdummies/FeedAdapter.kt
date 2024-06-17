@@ -1,6 +1,5 @@
  package com.example.rezeptefuerdummies
 
-import android.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -73,6 +72,11 @@ import com.squareup.picasso.Picasso
         feedItemList.addAll(newItems)
         notifyDataSetChanged() // Notify the adapter that the data set has changed
     }
+     fun setItems(Items: List<FeedItemModel>){
+         feedItemList.clear()
+         feedItemList.addAll(Items)
+         notifyDataSetChanged()
+     }
 
     override fun getItemId(position: Int): Long {
         return feedItemList[position].hashCode().toLong()
