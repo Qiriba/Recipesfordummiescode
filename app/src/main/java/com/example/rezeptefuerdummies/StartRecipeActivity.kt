@@ -1,7 +1,9 @@
 package com.example.rezeptefuerdummies
 
+import android.app.TimePickerDialog
 import android.content.Intent
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
@@ -10,6 +12,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
+import java.util.*
 
 class StartRecipeActivity : AppCompatActivity() {
 
@@ -19,10 +22,14 @@ class StartRecipeActivity : AppCompatActivity() {
     private lateinit var stepTextView: TextView
     private lateinit var imageView: ImageView
     private lateinit var nextButton: Button
+    private lateinit var btnSetTimer: Button
+    private lateinit var tvTimer: TextView
     private lateinit var prevButton: Button
 
     private var currentStepIndex = 0
     private var stepArray = emptyList<StepItem>()
+    private var countdownTimer: CountDownTimer? = null
+    private var timeInMillis: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +40,8 @@ class StartRecipeActivity : AppCompatActivity() {
         imageView = findViewById(R.id.asr_imageView)
         nextButton = findViewById(R.id.asr_nextButton)
         prevButton = findViewById(R.id.asr_prevButton)
+        btnSetTimer = findViewById(R.id.btnSetTimer)
+        tvTimer = findViewById(R.id.tvTimer)
 
         nextButton.setOnClickListener {
             nextButtonClick()
@@ -42,16 +51,20 @@ class StartRecipeActivity : AppCompatActivity() {
             prevButtonClick()
         }
 
+        btnSetTimer.setOnClickListener {
+            showTimePickerDialog()
+        }
+
         val recipeID = intent.getIntExtra("id", 0)
         Log.e("Recipe ID", "RecipeStartRecipe $recipeID")
 
         fetchStepsFromFirestore(recipeID)
     }
 
-    private fun fetchStepsFromFirestore(recipeID:Int) {
+    private fun fetchStepsFromFirestore(recipeID: Int) {
         // Firestore Abfrage für die Sammlung "rezepte_step"
         db.collection("rezepte_step")
-            .whereEqualTo("recipeID",recipeID)
+            .whereEqualTo("recipeID", recipeID)
             .get()
             .addOnSuccessListener { result ->
                 if (result.isEmpty) {
@@ -70,7 +83,8 @@ class StartRecipeActivity : AppCompatActivity() {
                             val imageUrl = stepData["imageURL"] as? String ?: ""
                             val title = stepData["title"] as? String ?: ""
                             val content = stepData["content"] as? String ?: ""
-                            StepItem(title, imageUrl, content)
+                            val isTimerNeeded = stepData["isTimerNeeded"] as? Boolean ?: false
+                            StepItem(title, imageUrl, content, isTimerNeeded)
                         }
                         Log.d("Firestore", "Steps loaded successfully: $stepArray")
                         updateStepTextView()
@@ -86,7 +100,6 @@ class StartRecipeActivity : AppCompatActivity() {
                 Log.w("Firestore", "Error getting documents: ", exception)
             }
     }
-
 
     private fun updateStepTextView() {
         // Sicherstellen, dass currentStepIndex gültig bleibt
@@ -105,6 +118,18 @@ class StartRecipeActivity : AppCompatActivity() {
                     Picasso.get()
                         .load(step.imageUrl)
                         .into(imageView)
+                }
+
+                if (step.isTimerNeeded) {
+                    btnSetTimer.visibility = Button.VISIBLE
+                    tvTimer.visibility = TextView.VISIBLE
+                    btnSetTimer.setOnClickListener {
+                        showTimePickerDialog()
+                    }
+                } else {
+                    btnSetTimer.visibility = Button.GONE
+                    tvTimer.visibility = TextView.GONE
+
                 }
             }
 
@@ -130,6 +155,50 @@ class StartRecipeActivity : AppCompatActivity() {
                 stepTextView.text = "No steps available."
             }
         }
+    }
+
+    private fun showTimePickerDialog() {
+        val calendar = Calendar.getInstance()
+        val hour = calendar.get(Calendar.HOUR_OF_DAY)
+        val minute = calendar.get(Calendar.MINUTE)
+
+        val timePickerDialog = TimePickerDialog(
+            this,
+            { _, hourOfDay, minute ->
+                startTimer(hourOfDay, minute)
+            },
+            hour,
+            minute,
+            true
+        )
+        timePickerDialog.show()
+    }
+
+    private fun startTimer(hours: Int, minutes: Int) {
+        val totalTimeInMillis = (hours * 3600 + minutes * 60) * 1000L
+
+        countdownTimer?.cancel()
+        countdownTimer = object : CountDownTimer(totalTimeInMillis, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                timeInMillis = millisUntilFinished
+                updateTimerUI()
+            }
+
+            override fun onFinish() {
+                timeInMillis = 0
+                updateTimerUI()
+                // Hier kann die Logik für die Aktion nach Ablauf des Timers hinzugefügt werden
+            }
+        }.start()
+    }
+
+    private fun updateTimerUI() {
+        val hours = (timeInMillis / 3600000).toInt()
+        val minutes = ((timeInMillis % 3600000) / 60000).toInt()
+        val seconds = ((timeInMillis % 60000) / 1000).toInt()
+
+        val timeString = String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds)
+        tvTimer.text = timeString
     }
 
     private fun endRecipe() {
