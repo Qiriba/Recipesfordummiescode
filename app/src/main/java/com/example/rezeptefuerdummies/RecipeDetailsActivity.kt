@@ -54,7 +54,7 @@ class RecipeDetailsActivity : AppCompatActivity() {
         val startRecipeButton = findViewById<Button>(R.id.startRecipeButton)
         startRecipeButton.setOnClickListener {
             val intent = Intent(this, StartRecipeActivity::class.java).apply {
-                putExtra("id", recipeID) // Verwende hier die lokale Variable recipeID
+                putExtra("id", recipeID)
             }
             startActivity(intent)
         }

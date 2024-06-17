@@ -39,18 +39,25 @@ class StartRecipeActivity : AppCompatActivity() {
 
         val recipeID = intent.getIntExtra("id", 0)
         Log.e("Recipe ID", "RecipeStartRecipe $recipeID")
-        fetchStepsFromFirestore("XjANct78kjI8K5Dq9OMX")
+
+        fetchStepsFromFirestore(recipeID)
     }
 
-    private fun fetchStepsFromFirestore(documentId: String) {
-        // Firestore query for the specific document in the "rezepte_step" collection
-        db.collection("rezepte_step").document(documentId)
+    private fun fetchStepsFromFirestore(recipeID:Int) {
+        // Firestore Abfrage für die Sammlung "rezepte_step"
+        db.collection("rezepte_step")
+            .whereEqualTo("recipeID",recipeID)
             .get()
-            .addOnSuccessListener { document ->
-                if (document != null && document.exists()) {
+            .addOnSuccessListener { result ->
+                if (result.isEmpty) {
+                    Log.d("Firestore", "No documents found.")
+                    return@addOnSuccessListener
+                }
+
+                for (document in result) {
                     Log.d("Firestore", "Document ID: ${document.id}")
 
-                    // Assuming the structure that "step" is a list of maps
+                    // Annahme der Struktur, dass "step" eine Liste von Maps ist
                     val steps = document.get("step") as? List<Map<String, Any>>
 
                     steps?.let {
@@ -68,17 +75,12 @@ class StartRecipeActivity : AppCompatActivity() {
                         Log.d("Firestore", "No steps available.")
                         stepTextView.text = "No steps available."
                     }
-                } else {
-                    Log.d("Firestore", "No document found with ID: $documentId")
-                    stepTextView.text = "No steps available."
                 }
             }
             .addOnFailureListener { exception ->
-                Log.w("Firestore", "Error getting document: ", exception)
+                Log.w("Firestore", "Error getting documents: ", exception)
             }
     }
-
-
 
 
     private fun updateStepTextView() {
