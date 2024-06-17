@@ -1,9 +1,11 @@
 package com.example.rezeptefuerdummies
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -85,11 +87,27 @@ class StartRecipeActivity : AppCompatActivity() {
     private fun updateStepTextView() {
         // Sicherstellen, dass currentStepIndex gültig bleibt
         currentStepIndex = currentStepIndex.coerceIn(0, stepArray.size - 1)
+
         // Hier den Text im TextView basierend auf currentStepIndex und stepArray aktualisieren
         if (currentStepIndex < stepArray.size) {
             Log.d("Firestore", "Updating stepTextView to: ${stepArray[currentStepIndex].content}")
             runOnUiThread {
                 stepTextView.text = stepArray[currentStepIndex].content
+                titleTextView.text = stepArray[currentStepIndex].name
+
+
+            }
+
+            // Überprüfen, ob der nächste Schritt der letzte Schritt ist
+            if (currentStepIndex == stepArray.size - 1) {
+                runOnUiThread {
+                    nextButton.text = "Finish"
+                    endRecipe()
+                }
+            } else {
+                runOnUiThread {
+                    nextButton.text = "Next"
+                }
             }
         } else {
             Log.d("Firestore", "No steps available. Updating stepTextView to default message.")
@@ -99,10 +117,37 @@ class StartRecipeActivity : AppCompatActivity() {
         }
     }
 
+    private fun endRecipe() {
+        showFinishConfirmationDialog()
+    }
 
     private fun nextButtonClick() {
         currentStepIndex++
         updateStepTextView()
+    }
+
+    private fun showFinishConfirmationDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Finish Recipe")
+        builder.setMessage("Are you sure you want to finish this recipe?")
+
+        builder.setPositiveButton("Yes") { dialogInterface, _ ->
+            dialogInterface.dismiss()
+            navigateToMainActivity()
+        }
+
+        builder.setNegativeButton("No") { dialogInterface, _ ->
+            dialogInterface.dismiss()
+        }
+
+        val dialog = builder.create()
+        dialog.show()
+    }
+
+    private fun navigateToMainActivity() {
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finishAffinity()
     }
 
     private fun prevButtonClick() {
