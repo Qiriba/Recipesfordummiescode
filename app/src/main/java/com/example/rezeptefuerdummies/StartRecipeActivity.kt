@@ -9,7 +9,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class StartRecipeActivity : AppCompatActivity() {
 
-    // Firebase Firestore Instanz
     private val db = FirebaseFirestore.getInstance()
 
     private lateinit var titleTextView: TextView
