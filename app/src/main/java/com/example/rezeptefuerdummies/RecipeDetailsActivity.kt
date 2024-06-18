@@ -34,9 +34,9 @@ class RecipeDetailsActivity : AppCompatActivity() {
         // Get references to the views
         val recipeImageView = findViewById<ImageView>(R.id.ard_imageView)
         val recipeNameTextView = findViewById<TextView>(R.id.ard_recipeName)
-        val recipeDifficultyTextView = findViewById<TextView>(R.id.ard_recipeDifficulty)
-        val recipeTimeTextView = findViewById<TextView>(R.id.ard_recipeTime)
-        val recipeCategoryTextView = findViewById<TextView>(R.id.ard_recipeCategory)
+        val recipeDifficultyTextView = findViewById<TextView>(R.id.ard_chip_difficulty)
+        val recipeTimeTextView = findViewById<TextView>(R.id.ard_chip_time)
+        val recipeCategoryTextView = findViewById<TextView>(R.id.ard_chip_category)
         val recipeDescriptionTextView = findViewById<TextView>(R.id.ard_recipeDescription)
         val recipeingredientsView = findViewById<TextView>(R.id.ard_recipeIngredients)
 
@@ -45,9 +45,9 @@ class RecipeDetailsActivity : AppCompatActivity() {
 
         // Set text for other views
         recipeNameTextView.text = "$recipeName"
-        recipeDifficultyTextView.text = "Difficulty: $recipeDifficulty"
-        recipeTimeTextView.text = "Time: $recipeTime"
-        recipeCategoryTextView.text = "Category: $recipeCategory"
+        recipeDifficultyTextView.text = "$recipeDifficulty"
+        recipeTimeTextView.text = "$recipeTime"
+        recipeCategoryTextView.text = "$recipeCategory"
         recipeDescriptionTextView.text = "$recipeDescription"
 
         // Button to start recipe activity
