@@ -12,8 +12,10 @@ import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.rezeptefuerdummies.fragments.FavoritesFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -32,6 +34,13 @@ class MainActivity : AppCompatActivity(), FeedAdapter.OnItemClickListener {
     private lateinit var searchAdapter: FeedAdapter
     private var feedItemList: MutableList<FeedItemModel> = mutableListOf()
     private var searchItemList: MutableList<FeedItemModel> = mutableListOf()
+
+    private val homeFragment = HomeFragment()
+    private val favoritesFragment = FavoritesFragment()
+    private val profileFragment = ProfileFragment()
+
+    private val fragmentManager = supportFragmentManager
+    private var activeFragment: Fragment = homeFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -107,20 +116,29 @@ class MainActivity : AppCompatActivity(), FeedAdapter.OnItemClickListener {
 
         requestPostNotificationPermission()
 
+        fragmentManager.beginTransaction().apply {
+            add(R.id.fragment_container, profileFragment, "3")
+            hide(profileFragment)
+            add(R.id.fragment_container, favoritesFragment, "2")
+            hide(favoritesFragment)
+            add(R.id.fragment_container, homeFragment, "1")
+            commit()
+        }
+
         // Hier wird die Navigation Toolbar für den Nutzer definiert
         val bottomNavigationView: BottomNavigationView = findViewById(R.id.bottom_navigation)
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_home -> {
-                    // Handle Home navigation
+                    switchFragment(homeFragment)
                     true
                 }
                 R.id.navigation_favorites -> {
-                    // Handle Dashboard navigation
+                    switchFragment(favoritesFragment)
                     true
                 }
                 R.id.navigation_profile -> {
-                    // Handle Notifications navigation
+                    switchFragment(profileFragment)
                     true
                 }
                 else -> false
@@ -141,8 +159,20 @@ class MainActivity : AppCompatActivity(), FeedAdapter.OnItemClickListener {
         startActivity(intent)
 
     }
+    private fun switchFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction().apply {
+            hide(activeFragment)
+            show(fragment)
+            commit()
+        }
+        activeFragment = fragment
 
-    private fun filterData(query: String?) {
+        // RecyclerViews ausblenden
+        findViewById<RecyclerView>(R.id.recyclerView).visibility = View.GONE
+        findViewById<RecyclerView>(R.id.search_recyclerView).visibility = View.GONE
+        }
+
+        private fun filterData(query: String?) {
         if (query.isNullOrBlank()) {
             searchAdapter.setItems(feedItemList) // Show all items if query is empty
         } else {

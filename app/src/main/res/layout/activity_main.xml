@@ -13,32 +13,35 @@
         android:elevation="4dp"
         android:theme="?attr/actionBarTheme" />
 
-    <!-- Main content area -->
-    <RelativeLayout
+    <!-- Main content area including fragment container -->
+    <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
+        android:layout_above="@id/bottom_navigation" />
+
+    <!-- RecyclerView for main content -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
         android:layout_above="@id/bottom_navigation"
-        android:layout_below="@id/toolbar">
+        android:clipToPadding="false"
+        android:padding="8dp"
+        android:visibility="visible" />
 
-        <!-- RecyclerView for main content -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:padding="8dp"
-            android:visibility="visible" />
-
-        <!-- RecyclerView for search results (initially invisible) -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/search_recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:padding="8dp"
-            android:visibility="gone" />
-
-    </RelativeLayout>
+    <!-- RecyclerView for search results (initially invisible) -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/search_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
+        android:layout_above="@id/bottom_navigation"
+        android:clipToPadding="false"
+        android:padding="8dp"
+        android:visibility="gone" />
 
     <!-- Bottom Navigation View -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
