@@ -1,12 +1,15 @@
 package com.example.rezeptefuerdummies
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
@@ -17,7 +20,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
-
 
 
 class MainActivity : AppCompatActivity(), FeedAdapter.OnItemClickListener {
@@ -72,6 +74,20 @@ class MainActivity : AppCompatActivity(), FeedAdapter.OnItemClickListener {
         searchAdapter = FeedAdapter(searchItemList)
         searchAdapter.setOnItemClickListener(this)
         searchRecyclerView.adapter = searchAdapter
+        val searchEditText = searchView.findViewById<SearchView.SearchAutoComplete>(androidx.appcompat.R.id.search_src_text)
+        searchEditText.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                filterData(searchEditText.text.toString())
+                hideKeyboard(searchEditText)
+                true
+            } else {
+                false
+            }
+        }
+        searchView.setOnCloseListener {
+            filterData(null) // Reset to full list when search is closed
+            false
+        }
         //Behavior for focus on the searchbar
         searchView.setOnQueryTextFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
@@ -80,6 +96,7 @@ class MainActivity : AppCompatActivity(), FeedAdapter.OnItemClickListener {
             } else {
                 searchRecyclerView.visibility = View.GONE
                 recyclerView.visibility = View.VISIBLE
+                searchView.onActionViewCollapsed()
             }
         }
 
@@ -174,5 +191,9 @@ class MainActivity : AppCompatActivity(), FeedAdapter.OnItemClickListener {
                 }
                 callback(feedItemList)
             }
+    }
+    fun Context.hideKeyboard(view: View) {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 }
