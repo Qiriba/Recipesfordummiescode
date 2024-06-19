@@ -10,10 +10,7 @@ import com.squareup.picasso.Picasso
 
  class FeedAdapter(private val feedItemList: MutableList<FeedItemModel>) :
      RecyclerView.Adapter<FeedAdapter.FeedViewHolder>() {
-
      private var onItemClickListener: OnItemClickListener? = null
-
-
 
      override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_feed, parent, false)

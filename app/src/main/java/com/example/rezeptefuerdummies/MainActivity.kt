@@ -35,57 +35,16 @@ class MainActivity : AppCompatActivity(), FeedAdapter.OnItemClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        val searchRecyclerView: RecyclerView = findViewById(R.id.search_recyclerView)
-        searchRecyclerView.visibility = View.GONE
-        searchRecyclerView.layoutManager = LinearLayoutManager(this)
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false) // Hide default title
 
-        searchView = SearchView(toolbar.context)
-        toolbar.addView(searchView)
-
-        searchView.setOnQueryTextFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                recyclerView.visibility = View.GONE
-                searchRecyclerView.visibility = View.VISIBLE
-            } else {
-                searchRecyclerView.visibility = View.GONE
-                recyclerView.visibility = View.VISIBLE
-            }
-        }
-
-        // Create an empty list for feed items
-        var searchItemList: MutableList<FeedItemModel> = mutableListOf()
-        // Create and set the adapter
+        val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        // Create and set the adapter for recycleview
         feedAdapter = FeedAdapter(feedItemList)
         feedAdapter.setOnItemClickListener(this)
         recyclerView.adapter = feedAdapter
-
-        searchAdapter = FeedAdapter(searchItemList)
-        searchAdapter.setOnItemClickListener(this)
-        searchRecyclerView.adapter = searchAdapter
-
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                searchItemList = feedItemList
-                filterData(newText)
-                return true
-            }
-        })
-
-        // Firestore instance
-        val db = Firebase.firestore
-        getDatabaseData(db,"rezepte") { data ->
-            feedItemList.addAll(data)
-            feedAdapter.notifyDataSetChanged()
-        }
 
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -99,10 +58,49 @@ class MainActivity : AppCompatActivity(), FeedAdapter.OnItemClickListener {
                     && firstVisibleItemPosition >= 0
                 ) {
                     //Füge Dummydata dem adapter hinzu
-                    // adapter.addItems(createDummyData())
+                    //TODO: Scroll feed adden, Atuell nicht genug rezepte
                 }
             }
         })
+
+        val searchRecyclerView: RecyclerView = findViewById(R.id.search_recyclerView)
+        searchRecyclerView.visibility = View.GONE
+        searchRecyclerView.layoutManager = LinearLayoutManager(this)
+        searchView = SearchView(toolbar.context)
+        toolbar.addView(searchView)
+        //Create adapter for search feed
+        searchAdapter = FeedAdapter(searchItemList)
+        searchAdapter.setOnItemClickListener(this)
+        searchRecyclerView.adapter = searchAdapter
+        //Behavior for focus on the searchbar
+        searchView.setOnQueryTextFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                recyclerView.visibility = View.GONE
+                searchRecyclerView.visibility = View.VISIBLE
+            } else {
+                searchRecyclerView.visibility = View.GONE
+                recyclerView.visibility = View.VISIBLE
+            }
+        }
+
+        //Behavior when typing in the search bar
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+            override fun onQueryTextChange(newText: String?): Boolean {
+                searchItemList = feedItemList
+                filterData(newText)
+                return true
+            }
+        })
+
+        // Firestore instance
+        val db = Firebase.firestore
+        getDatabaseData(db,"rezepte") { data ->
+            feedItemList.addAll(data)
+            feedAdapter.notifyDataSetChanged()
+        }
 
         requestPostNotificationPermission()
     }
@@ -118,7 +116,6 @@ class MainActivity : AppCompatActivity(), FeedAdapter.OnItemClickListener {
             putExtra("description", feedItem.recipeDescription)
         }
         startActivity(intent)
-
     }
 
     private fun filterData(query: String?) {
@@ -126,7 +123,7 @@ class MainActivity : AppCompatActivity(), FeedAdapter.OnItemClickListener {
             searchAdapter.setItems(feedItemList) // Show all items if query is empty
         } else {
             val filteredList = feedItemList.filter { item ->
-                // Filter based on the recipeName field (you can adjust this to any other field if needed)
+                // Filter based on the recipeName field
                 item.recipeName.contains(query, ignoreCase = true)
             }
             searchAdapter.setItems(filteredList)
@@ -154,6 +151,7 @@ class MainActivity : AppCompatActivity(), FeedAdapter.OnItemClickListener {
             }
         }
     }
+
     private fun getDatabaseData(db: FirebaseFirestore, collection:String, callback: (MutableList<FeedItemModel>) -> Unit) {
         val feedItemList: MutableList<FeedItemModel> = mutableListOf()
 
@@ -161,14 +159,12 @@ class MainActivity : AppCompatActivity(), FeedAdapter.OnItemClickListener {
             .get()
             .addOnSuccessListener { result ->
                 for (doc in result) {
-                    Log.d("Firestore", "id: ${doc.id} - data: ${doc.data}")
                     val recipeName = doc.getString("recipeName") ?: ""
                     val recipeTime = doc.getString("recipeTime") ?: ""
                     val recipeDifficulty = doc.getString("recipeDifficulty") ?: ""
                     val recipeCategory = doc.getString("recipeCategory") ?: ""
                     val imageUrl = doc.getString("imageUrl") ?: ""
                     val id = doc.getLong("recipeID")?.toInt() ?: 0
-                    Log.e(id.toString(),"Recipe ID"+id)
 
                     val recipeDescription = doc.getString("recipeDescription") ?: ""
 
@@ -179,21 +175,4 @@ class MainActivity : AppCompatActivity(), FeedAdapter.OnItemClickListener {
                 callback(feedItemList)
             }
     }
-
-    // Replace this method with your actual data source
-
-    /* Dummydata
-    private fun createDummyData(): MutableList<FeedItemModel> {
-        val dummyData = mutableListOf<FeedItemModel>()
-
-        // Add your feed items to the list
-        dummyData.add(FeedItemModel("https://karlsruhepuls.de/wp-content/uploads/2023/06/Thai-Food-Festival-Karlsruhe.jpg", "Thai Curry", "Hard", "45 Min", "Klassisch", 1))
-        dummyData.add(FeedItemModel("https://www.chefsculinar.de/chefsculinar/ds_img/assets_700/2014-09-04-Doener-690x460.jpg", "Döner Kebap", "Medium", "1 H", "Klassisch", 2))
-        dummyData.add(FeedItemModel("https://assets.tmecosys.com/image/upload/t_web767x639/img/recipe/ras/Assets/b36fbe87cb4d6e6e3dce4b23aa35e481/Derivates/563a4efc4ab575cad5db7a9279096132b4334a7c.jpg", "Deutsche Rumpsteak", "Hard", "45 Min", "Klassisch", 3))
-        dummyData.add(FeedItemModel("https://www.lidl-kochen.de/images/recipe-wide/860844/veganer-gyrosteller-mit-reis-und-salat-311084.jpg", "Veganer Gyros Teller", "Easy", "30 Min", "Vegan", 4))
-        dummyData.add(FeedItemModel("https://img.chefkoch-cdn.de/rezepte/2529831396465550/bilder/1509532/crop-960x720/pfannkuchen-crepe-und-pancake.jpg", "Omas Pfannkuchen", "Easy", "20 Min", "Vegetarisch", 5))
-        return dummyData
-    }
-
-     */
 }
